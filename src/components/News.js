@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
@@ -18,7 +18,7 @@ const News = (props) => {
   //   props.category
   // )} - News App`;
 
-  const updateNews = async (pageNo) => {
+  const updateNews = async () => {
     setLoading(true);
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&page=${page}&pageSize=${props.pageSize}&apiKey=${props.apiKey}`;
     let data = await fetch(url);
@@ -29,15 +29,15 @@ const News = (props) => {
   };
 
   const fetchMoreData = async () => {
-    setLoading(true);
     setPage(page + 1);
     const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&page=${page}&pageSize=${props.pageSize}&apiKey=${props.apiKey}`;
+    setLoading(true);
     let data = await fetch(url);
     let parsedData = await data.json();
     setTimeout(() => {
       setArticles(articles.concat(parsedData.articles));
-      setLoading(false);
       setTotalResults(parsedData.articles);
+      setLoading(false);
     }, 500);
   };
 
@@ -59,7 +59,7 @@ const News = (props) => {
         <InfiniteScroll
           dataLength={articles.length}
           next={fetchMoreData}
-          hasMore={articles.length <= totalResults}
+          hasMore={articles.length !== totalResults}
           loader={<Spinner />}
           style={{
             overflow: "hidden",
@@ -116,7 +116,7 @@ const News = (props) => {
 };
 News.defaultProps = {
   country: "in",
-  pageSize: 12,
+  pageSize: 9,
   category: "general",
 };
 News.propTypes = {
