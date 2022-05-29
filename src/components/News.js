@@ -14,9 +14,6 @@ const News = (props) => {
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
-  // document.title = `${capitalizeFirstLetter(
-  //   props.category
-  // )} - News App`;
 
   const updateNews = async () => {
     setLoading(true);
@@ -29,8 +26,12 @@ const News = (props) => {
   };
 
   const fetchMoreData = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?country=${
+      props.country
+    }&category=${props.category}&page=${page + 1}&pageSize=${
+      props.pageSize
+    }&apiKey=${props.apiKey}`;
     setPage(page + 1);
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&page=${page}&pageSize=${props.pageSize}&apiKey=${props.apiKey}`;
     setLoading(true);
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -42,12 +43,16 @@ const News = (props) => {
   };
 
   useEffect(() => {
+    document.title = `${capitalizeFirstLetter(props.category)} - News App`;
     updateNews();
+    //eslint-disable-next-line
   }, []);
 
   return (
-    <div className="container my-3 text-center">
-      <h2>News - Top {capitalizeFirstLetter(props.category)} Headlines</h2>
+    <>
+      <h1 className="text-center" style={{ margin: "80px 0px 0px" }}>
+        News - Top {capitalizeFirstLetter(props.category)} Headlines
+      </h1>
 
       {loading && (
         <div className="container center">
@@ -65,7 +70,7 @@ const News = (props) => {
             overflow: "hidden",
           }}
         >
-          <div className="row">
+          <div className="row" style={{ marginTop: "30px" }}>
             {articles.map((element, index) => {
               return (
                 <div className="col-md-4 " key={index}>
@@ -111,7 +116,7 @@ const News = (props) => {
             Next &rarr;
           </button>
         </div> */}
-    </div>
+    </>
   );
 };
 News.defaultProps = {
